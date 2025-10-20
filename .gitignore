@@ -1,0 +1,55 @@
+# --- Python general ---
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+*.pdb
+*.egg-info/
+build/
+dist/
+
+# --- Virtual environments ---
+venv/
+.env/
+.venv/
+ENV/
+env/
+env.bak/
+
+# --- IDEs & editors ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- System files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs & caches ---
+*.log
+*.sqlite3
+*.db
+*.pid
+*.cache
+*.bak
+
+# --- Configuration ---
+.env
+.env.*
+!.env.example
+
+# --- Docker ---
+*.pid
+*.seed
+*.pid.lock
+
+# --- Pytest & coverage ---
+.coverage
+.cache/
+htmlcov/
+pytest_cache/
+
+# --- Jupyter ---
+.ipynb_checkpoints/

@@ -15,4 +15,4 @@ class InsurancePolicy(Base):
     car_id: Mapped[int] = mapped_column(ForeignKey("cars.id", ondelete="CASCADE"))
     car: Mapped["Car"] = relationship("Car", back_populates="policies")
 
-    __table_args__ = (CheckConstraint("end_date >= start_date", name="check_valid_policy_dates"))
+    __table_args__ = (CheckConstraint("end_date >= start_date", name="check_valid_policy_dates"),)

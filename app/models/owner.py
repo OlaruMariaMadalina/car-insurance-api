@@ -1,7 +1,10 @@
 from sqlalchemy import String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
-from app.models.car import Car
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.car import Car 
 
 class Owner(Base):
     __tablename__="owners"

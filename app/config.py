@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "car-insurance-api"
-    app_env: str = "dev"                  # dev/prod/test
+    app_env: str = "dev"                  
     log_level: str = "INFO"
     database_url: str = "sqlite+aiosqlite:///./dev.db"
 

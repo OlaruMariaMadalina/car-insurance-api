@@ -1,10 +1,12 @@
 from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
-from app.models.owner import Owner
-from app.models.policy import InsurancePolicy
-from app.models.claim import Claim
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.owner import Owner
+    from app.models.policy import InsurancePolicy
+    from app.models.claim import Claim
 
 class Car(Base):
     __tablename__ = "cars"

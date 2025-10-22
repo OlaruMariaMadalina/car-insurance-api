@@ -20,5 +20,5 @@ class Car(Base):
     owner_id: Mapped[int] = mapped_column(ForeignKey("owners.id", ondelete="CASCADE"))
     owner: Mapped["Owner"] = relationship("Owner", back_populates="cars")
 
-    policies: Mapped[list["InsurancePolicy"]] = relationship("InsurancePolicy", back_populates="cars")
-    claims: Mapped[list["Claim"]] = relationship("Claim", back_populates="cars")
+    policies: Mapped[list["InsurancePolicy"]] = relationship("InsurancePolicy", back_populates="car")
+    claims: Mapped[list["Claim"]] = relationship("Claim", back_populates="car")

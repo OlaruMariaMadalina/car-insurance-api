@@ -22,3 +22,8 @@ class PolicyRead(BaseModel):
     policy_number: str
     start_date: date
     end_date: date
+
+class ValidityResponse(BaseModel):
+    car_id: int
+    date: date
+    valid: bool

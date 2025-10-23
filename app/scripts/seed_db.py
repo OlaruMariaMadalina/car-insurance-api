@@ -49,6 +49,7 @@ async def seed():
                     policy_number=f"P-{i+1:03d}",
                     start_date=date(2024, 1, 1),
                     end_date=date(2025, 1, 1),
+                    logged_expiry_at=None
                 )
             )
         session.add_all(policies)

@@ -6,6 +6,9 @@ from app.models.car import Car
 from app.models.claim import Claim
 from app.schemas.claim import ClaimRead, ClaimCreate
 from datetime import date
+import structlog
+
+log = structlog.get_logger()
 
 router = APIRouter(prefix="/api/cars", tags=["policies"])
 
@@ -32,6 +35,10 @@ async def create_claim(
 
     response.headers["Location"] = f"/api/cars/{car_id}/claims/{claim.id}"
 
+    log.info("claim_created",
+         claim_id=claim.id, car_id=claim.car_id,
+         amount=str(claim.amount), claim_date=str(claim.claim_date))
+    
     return ClaimRead(
         id=claim.id,
         car_id=claim.car_id,

@@ -1,7 +1,8 @@
-from sqlalchemy import String, Integer, Date, ForeignKey, CheckConstraint
+from sqlalchemy import String, Integer, Date, ForeignKey, CheckConstraint, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 from app.models.car import Car
+from datetime import datetime
 
 class InsurancePolicy(Base):
     __tablename__="insurance_policies"
@@ -11,6 +12,7 @@ class InsurancePolicy(Base):
     policy_number: Mapped[str] = mapped_column(String(64), nullable=False)
     start_date: Mapped[Date] = mapped_column(Date, nullable=False)
     end_date: Mapped[Date] = mapped_column(Date, nullable=False)
+    logged_expiry_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True, nullable=True)
 
     car_id: Mapped[int] = mapped_column(ForeignKey("cars.id", ondelete="CASCADE"))
     car: Mapped["Car"] = relationship("Car", back_populates="policies")

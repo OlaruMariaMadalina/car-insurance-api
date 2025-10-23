@@ -6,6 +6,9 @@ from app.models.car import Car
 from app.models.policy import InsurancePolicy
 from app.schemas.policy import PolicyCreate, PolicyRead, ValidityResponse
 from datetime import date
+import structlog
+
+log = structlog.get_logger()
 
 router = APIRouter(prefix="/api/cars", tags=["policies"])
 
@@ -29,6 +32,10 @@ async def create_policy(
     session.add(policy)
     await session.flush()
     await session.commit()
+    
+    log.info("policy_created",
+         policy_id=policy.id, car_id=policy.car_id,
+         provider=policy.provider, start=str(policy.start_date), end=str(policy.end_date))
 
     return PolicyRead(
         id=policy.id,

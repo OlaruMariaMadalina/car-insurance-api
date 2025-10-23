@@ -1,6 +1,15 @@
 import logging, sys, structlog, os
 
 def setup_logging():
+    """
+    Configures logging for the application using structlog and the standard logging module.
+
+    - Sets the log level from the LOG_LEVEL environment variable (default: INFO).
+    - Logs to stdout with a simple message format.
+    - Adds processors for log level, timestamp, and exception formatting.
+    - Uses ConsoleRenderer for human-readable output.
+    - Sets APScheduler and SQLAlchemy engine logs to WARNING to reduce noise.
+    """
     level =  os.getenv("LOG_LEVEL", "INFO").upper()
     
     logging.basicConfig(level=level, stream=sys.stdout, format="%(message)s")

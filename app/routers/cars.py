@@ -19,6 +19,17 @@ async def list_cars(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0)
 ):
+    """
+    Returns a paginated list of cars and their owners.
+
+    Args:
+        session (AsyncSession): Database session dependency.
+        limit (int): Maximum number of cars to return (default: 50).
+        offset (int): Number of cars to skip (default: 0).
+
+    Returns:
+        List[CarRead]: List of car details with owner information.
+    """
     statement = (
         select(Car)
         .options(selectinload(Car.owner))
@@ -30,11 +41,22 @@ async def list_cars(
     car_reads = [CarRead.model_validate(c) for c in cars]
     return car_reads
 
+
 @router.get("/{car_id}/history", response_model=list[CarHistoryItem], status_code=status.HTTP_200_OK)
 async def get_car_history(
     session: AsyncSession = Depends(get_session),
     car_id: int = Path(..., ge=1)
 ):
+    """
+    Returns the chronological history of a car, including all insurance policies and claims.
+
+    Args:
+        session (AsyncSession): Database session dependency.
+        car_id (int): The ID of the car for which to retrieve history.
+
+    Returns:
+        List[CarHistoryItem]: List of events (policies and claims) for the car.
+    """
     car = await session.get(Car, car_id)
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")

@@ -15,6 +15,10 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def get_sync_url() -> str:
+    """
+    Returns a synchronous database URL for Alembic migrations.
+    If the URL uses asyncpg, it replaces it with psycopg2 for sync operations.
+    """
     url = settings.database_url
     if url.startswith("postgresql+asyncpg://"):
         url = url.replace("postgresql+asyncpg://", "postgresql+psycopg2://")
@@ -46,6 +50,12 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online():
+    """
+    Run migrations in 'online' mode.
+
+    This creates an Engine and associates a connection with the context.
+    Migrations are run within a transaction.
+    """
     connectable = create_engine(get_sync_url(), poolclass=pool.NullPool)
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)

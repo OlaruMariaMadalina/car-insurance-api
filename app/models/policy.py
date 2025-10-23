@@ -1,10 +1,16 @@
-from sqlalchemy import String, Integer, Date, ForeignKey, CheckConstraint, DateTime
+from sqlalchemy import String, Integer, Date, ForeignKey, CheckConstraint, DateTime, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 from app.models.car import Car
 from datetime import datetime
 
 class InsurancePolicy(Base):
+    """
+    SQLAlchemy model for the 'insurance_policies' table.
+
+    Represents an insurance policy for a car, including provider, policy number,
+    validity period, expiry log timestamp, and relationship to the car.
+    """
     __tablename__="insurance_policies"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
@@ -17,4 +23,7 @@ class InsurancePolicy(Base):
     car_id: Mapped[int] = mapped_column(ForeignKey("cars.id", ondelete="CASCADE"))
     car: Mapped["Car"] = relationship("Car", back_populates="policies")
 
-    __table_args__ = (CheckConstraint("end_date >= start_date", name="check_valid_policy_dates"),)
+    __table_args__ = (
+        CheckConstraint("end_date >= start_date", name="check_valid_policy_dates"),
+        UniqueConstraint("car_id", "provider", "policy_number", name="uq_policy_per_car_provider"),
+    )

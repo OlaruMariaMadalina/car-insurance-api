@@ -7,6 +7,11 @@ if TYPE_CHECKING:
     from app.models.car import Car 
 
 class Owner(Base):
+    """
+    SQLAlchemy model for the 'owners' table.
+
+    Represents a car owner with full name, email, and a list of owned cars.
+    """
     __tablename__="owners"
 
     id: Mapped[int] = mapped_column(Integer, nullable=False, primary_key=True)

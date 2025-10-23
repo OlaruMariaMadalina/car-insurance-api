@@ -8,6 +8,11 @@ from app.config import settings
 log = structlog.get_logger()
 
 class Scheduler:
+    """
+    Manages scheduling of background jobs using APScheduler.
+
+    Schedules the policy expiry scan job at a configurable interval.
+    """
     def __init__(self, interval_minutes: int = 10, timezone: str = "Europe/Bucharest"):
         self.scheduler = AsyncIOScheduler(timezone=timezone)
         self.interval_minutes = interval_minutes
@@ -28,6 +33,7 @@ class Scheduler:
     def shutdown(self):
         self.scheduler.shutdown(wait=False)
         log.info("scheduler_stopped")
-        
+
+# Singleton instance of Scheduler     
 scheduler_singleton = Scheduler(interval_minutes=settings.expiry_scan_interval_minutes)    
     

@@ -9,6 +9,12 @@ if TYPE_CHECKING:
     from app.models.claim import Claim
 
 class Car(Base):
+    """
+    SQLAlchemy model for the 'cars' table.
+
+    Represents a car entity with its identification number, make, model, year,
+    owner, insurance policies, and claims.
+    """
     __tablename__ = "cars"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)

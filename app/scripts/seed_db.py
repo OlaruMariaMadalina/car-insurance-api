@@ -7,7 +7,6 @@ from app.models.policy import InsurancePolicy
 
 async def seed():
     async with SessionLocal() as session:
-        # --- 10 owneri ---
         owners = [
             Owner(full_name="John Doe", email="john.doe@example.com"),
             Owner(full_name="Jane Smith", email="jane.smith@example.com"),
@@ -21,9 +20,8 @@ async def seed():
             Owner(full_name="Hannah Lewis", email="hannah.lewis@example.com"),
         ]
         session.add_all(owners)
-        await session.flush()  # obținem id-urile
+        await session.flush()
 
-        # --- 10 mașini ---
         cars = [
             Car(identification_number="ID0000000001", make="Toyota", model="Corolla", year=2020, owner_id=owners[0].id),
             Car(identification_number="ID0000000002", make="Honda", model="Civic",   year=2021, owner_id=owners[1].id),
@@ -39,7 +37,6 @@ async def seed():
         session.add_all(cars)
         await session.flush()
 
-        # --- 10 polițe de test ---
         policies = []
         for i, car in enumerate(cars):
             policies.append(

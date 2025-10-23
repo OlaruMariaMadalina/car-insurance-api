@@ -6,6 +6,12 @@ from sqlalchemy import TIMESTAMP, func
 from datetime import datetime
 
 class Claim(Base):
+    """
+    SQLAlchemy model for the 'claims' table.
+
+    Represents an insurance claim for a car, including claim date, description,
+    amount, creation timestamp, and relationship to the car.
+    """
     __tablename__ = "claims"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)

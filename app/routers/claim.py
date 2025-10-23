@@ -19,6 +19,21 @@ async def create_claim(
     car_id: int = Path(..., ge=1),
     session: AsyncSession = Depends(get_session),
 ):
+    """
+    Create a new insurance claim for a specific car.
+
+    Args:
+        data (ClaimCreate): The claim data from the request body.
+        response (Response): FastAPI response object for setting headers.
+        car_id (int): The ID of the car for which the claim is created.
+        session (AsyncSession): Database session dependency.
+
+    Returns:
+        ClaimRead: The created claim details.
+
+    Raises:
+        HTTPException: 404 if the car is not found, 500 for unexpected errors.
+    """
     car = await session.get(Car, car_id)
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
@@ -36,8 +51,8 @@ async def create_claim(
     response.headers["Location"] = f"/api/cars/{car_id}/claims/{claim.id}"
 
     log.info("claim_created",
-         claim_id=claim.id, car_id=claim.car_id,
-         amount=str(claim.amount), claim_date=str(claim.claim_date))
+        claim_id=claim.id, car_id=claim.car_id,
+        amount=str(claim.amount), claim_date=str(claim.claim_date))
     
     return ClaimRead(
         id=claim.id,

@@ -11,7 +11,7 @@ class ClaimCreate(BaseModel):
         amount (float): The claimed amount (must be positive).
     """
     claim_date: date
-    description: str = Field(..., max_length=64)
+    description: str = Field(..., min_length=1, max_length=64)
     amount: float = Field(..., ge=0.01)
     
 class ClaimRead(BaseModel):

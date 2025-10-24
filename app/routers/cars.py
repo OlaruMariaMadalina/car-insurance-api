@@ -1,11 +1,11 @@
 # app/main.py
-from fastapi import FastAPI, Depends, Query, status, APIRouter, Path, HTTPException
+from fastapi import Depends, Query, status, APIRouter, Path, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.utils.db_deps import get_session
 from app.config import settings
-from app.schemas.car import CarRead, CarHistoryItem
+from app.schemas.car import CarRead, HistoryItem, PolicyHistoryItem, ClaimHistoryItem
 from sqlalchemy import select
 from app.models.car import Car
 from app.models.policy import InsurancePolicy
@@ -42,7 +42,7 @@ async def list_cars(
     return car_reads
 
 
-@router.get("/{car_id}/history", response_model=list[CarHistoryItem], status_code=status.HTTP_200_OK)
+@router.get("/{car_id}/history", response_model=list[HistoryItem], status_code=status.HTTP_200_OK)
 async def get_car_history(
     session: AsyncSession = Depends(get_session),
     car_id: int = Path(..., ge=1)
@@ -69,11 +69,11 @@ async def get_car_history(
     claim_response = await session.execute(claim_statement)
     claims = claim_response.scalars().all()
 
-    events: list[CarHistoryItem] = []
+    events: list[HistoryItem] = []
 
     for p in policies:
         events.append(
-            CarHistoryItem(
+            PolicyHistoryItem(
                 type="POLICY",
                 policy_id=p.id,
                 start_date=p.start_date,
@@ -84,16 +84,17 @@ async def get_car_history(
 
     for c in claims:
         events.append(
-            CarHistoryItem(
+            ClaimHistoryItem(
                 type="CLAIM",
-                policy_id=c.id,
+                claim_id=c.id,
                 claim_date=c.claim_date,
                 amount=c.amount,
                 description=c.description,
             )
         )
+        
     events.sort(
-        key=lambda item: item.start_date or item.claim_date or item.end_date
+        key=lambda item: getattr(item, "start_date", None) or getattr(item, "claim_date", None) or getattr(item, "end_date", None)
     )
     
-    return events
+    return [e.model_dump(by_alias=True, exclude_none=True) for e in events]

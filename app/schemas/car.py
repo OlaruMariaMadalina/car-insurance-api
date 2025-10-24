@@ -1,4 +1,5 @@
-from pydantic import BaseModel, RootModel
+from pydantic import BaseModel, Field
+from typing import Literal, Annotated, Union
 from app.schemas.owner import OwnerRead
 from datetime import date
 from decimal import Decimal
@@ -17,25 +18,26 @@ class CarRead(BaseModel):
     class Config:
         from_attributes = True
 
-class CarHistoryItem(BaseModel):
-    """
-    Pydantic schema representing a single event in a car's history.
-    Can be either a policy or a claim, with relevant metadata.
-    """
-    type:str
-    policy_id: int | None = None
-    start_date: date | None = None
-    end_date: date | None = None
-    provider: str | None = None
+class PolicyHistoryItem(BaseModel):
+    type: Literal["POLICY"] = "POLICY"
+    policy_id: int
+    start_date: date
+    end_date: date
+    provider: str
 
-    claim_id: int | None = None
-    claim_date: date | None = None
-    amount: Decimal | None = None
-    description: str | None = None
+    class Config:
+        populate_by_name = True
+        from_attributes = True
 
-class CarHistoryResponse(RootModel[list[CarHistoryItem]]):
-    """
-    Pydantic root model for a list of car history items.
-    Used as the response schema for car history endpoints.
-    """
-    pass
+class ClaimHistoryItem(BaseModel):
+    type: Literal["CLAIM"] = "CLAIM"
+    claim_id: int
+    claim_date: date
+    amount: Decimal
+    description: str
+
+    class Config:
+        populate_by_name = True
+        from_attributes = True
+
+HistoryItem = Annotated[Union[PolicyHistoryItem, ClaimHistoryItem], Field(discriminator="type")]

@@ -41,8 +41,7 @@ async def _scan_and_log_today_expiries(session: AsyncSession, now: datetime) -> 
     
 def _in_first_hour_of_today(now: datetime) -> bool:
     today_start = datetime.combine(now.date(), time(0,0), tzinfo=now.tzinfo)
-    # return today_start <= now < (today_start + timedelta(hours=1))
-    return True
+    return today_start <= now < (today_start + timedelta(hours=1))
 
 async def run_policy_expiry_scan() -> None:
     
